@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <title>个人中心</title>
+    {% load static %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script type='text/javascript' src='{% static 'jQuery/jquery-3.3.1.min.js' %}'></script>
+    <script type='text/javascript' src='{% static 'jQuery/jquery.collapsible.min.js' %}'></script>
+
+    <script type='text/javascript' src='{% static "blog/js/swiper.min.js" %}'></script>
+    <script type='text/javascript' src='{% static "blog/js/masonry.pkgd.min.js" %}'></script>
+    <script type='text/javascript' src="{% static 'layui/layui.all.js' %}"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- Layui CSS&JS -->
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
+
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+
+    <!-- ElegantFonts CSS -->
+    <link rel="stylesheet" href="{% static 'blog/css/elegant-fonts.css' %}">
+
+    <!-- themify-icons CSS -->
+    <link rel="stylesheet" href="{% static 'blog/css/themify-icons.css' %}">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="{% static 'blog/css/swiper.min.css' %}">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+    <style>
+        body {
+            background-color: #f3f5f7;
+        }
+
+        .center-header {
+            background: url("/media/image/admin.png") no-repeat center;
+            background-size: 100%;
+        }
+
+        .center-header-overlay {
+            background: rgba(21, 20, 33, .2);
+            height: 390px;
+            padding-top: 310px;
+        }
+
+        .center-header-overlay button[type="button"] {
+            display: flex;
+            float: right;
+            margin-right: 8%;
+            background: rgba(21, 20, 33, .2);
+            text-align: center;
+        }
+
+        .user-information-box {
+            margin-top: 5%;
+            text-align: center;
+        }
+        .user-nav{
+            width: 25%;
+        }
+        .user-img {
+            margin-top: 50%;
+            width: 200px;
+            height: 200px;
+            border: white solid 1px;
+            border-radius: 50%;
+        }
+
+        /* 用户导航 */
+        .user-list{
+            margin-top: 20%;
+        }
+        .user-list li{
+            border: white solid 1px;
+        }
+        .user-list li:hover{
+            opacity: 0.2;
+        }
+
+        .introduce{
+            float: right;
+            width: 75%;
+        }
+    </style>
+
+</head>
+<body>
+<div class="center-header">
+    <header class="site-header">
+        <div class="top-header-bar">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-lg-6 d-none d-md-flex flex-wrap justify-content-center justify-content-lg-start mb-3 mb-lg-0">
+                        <div class="header-bar-email d-flex align-items-center">
+                            <i class="fa fa-calendar"></i><a href="#">桃之夭夭，灼灼其华</a>
+                        </div><!-- .header-bar -->
+                    </div><!-- .col -->
+
+                    <div class="col-12 col-lg-6 d-flex flex-wrap justify-content-center justify-content-lg-end align-items-center">
+                        {% block search-box %}
+                            <div class="header-bar-search">
+                                <form class="flex align-items-stretch" action="{% url 'blog-search' %}" method="post">
+                                    <!-- 博客搜索 -->
+                                    <input type="text" list="suggestion" autocomplete="off"
+                                           placeholder="搜索..."
+                                           name="search">
+                                    <button type="submit" value=""
+                                            class="flex justify-content-center align-items-center"><i
+                                            class="fa fa-search"></i></button>
+                                    <datalist id="suggestion"></datalist>
+                                    {% csrf_token %}
+                                </form>    <!-- 博客搜索 -->
+
+                            </div><!-- .header-bar-search -->
+                        {% endblock %}
+                        <!-- creat-center-->
+                        <div class="user-write ">
+                            <a href="{% url 'blog-write' %}" target="_blank">
+                                <button type="button" class="layui-btn layui-btn-normal">创作中心</button>
+                            </a>
+                        </div>
+                        <!-- creat-center-->
+
+                        <!-- user information -->
+                        {% if request.user.is_authenticated %}
+                            <div class="user-image ">
+                                <img src="/media/{{ request.user.image }}" alt="">
+                            </div>
+                            <div class="header-bar-menu ">
+
+                                <ul class="flex justify-content-center align-items-center py-2 pt-md-0">
+                                    <li><a href="{% url 'user-person-center' %}">{{ request.user.nike_name }}</a></li>
+                                    <li>
+                                        <a href="#" class="logout"><i class="fa fa-sign-out"
+                                                                      aria-hidden="true"></i>注销</a>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        {% else %}
+                            <div class="header-bar-menu">
+                                <ul class="flex justify-content-center align-items-center py-2 pt-md-0">
+                                    <li><a href="{% url 'register' %}">注册</a></li>
+                                    <li><a href="{% url 'login' %}">登录</a></li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <!-- .header-bar-menu -- end user information -->
+
+                    </div><!-- .col -->
+                </div><!-- .row -->
+            </div><!-- .container-fluid -->
+        </div><!-- .top-header-bar -->
+
+
+        <!-- 导航 -->
+        <div class="nav-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-9 col-lg-3">
+                        <div class="site-branding">
+                            <h1 class="site-title"><a href="{% url 'index' %}" rel="home">彩虹<span>海</span></a></h1>
+                        </div><!-- .site-branding -->
+                    </div><!-- .col -->
+
+                    <div class="col-3 col-lg-9 flex justify-content-end align-content-center">
+                        <nav class="site-navigation flex justify-content-end align-items-center">
+                            <ul class="flex flex-column flex-lg-row justify-content-lg-end align-content-center">
+                                <li><a href="{% url 'index' %}">主页</a>
+                                <li {% ifequal "/blog/"  request.path %} class='current-menu-item' {% endifequal %}><a
+                                        href="{% url 'blog-index' %}">博客</a></li>
+                                <li{% ifequal "/blog/about/"  request.path %}
+                                    class='current-menu-item' {% endifequal %}><a href="{% url 'blog-about' %}">关于</a>
+                                </li>
+                                <li{% ifequal "/blog/blog-search/"  request.path %}
+                                    class='current-menu-item' {% endifequal %}><a href="{% url 'blog-search' %}">搜索</a>
+                                </li>
+                            </ul>
+                            <div class="hamburger-menu d-lg-none">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div><!-- .hamburger-menu -->
+
+                            <div class="header-bar-cart">
+                                <a href="" class="flex justify-content-center align-items-center"></a>
+                            </div><!-- .header-bar-search -->
+                        </nav><!-- .site-navigation -->
+                    </div><!-- .col -->
+                </div><!-- .row -->
+            </div><!-- .container -->
+        </div><!-- .nav-bar -->
+    </header><!-- .site-header -->
+    <div class="center-header-overlay">
+        <input type="file" hidden>
+        <button type="button" class="layui-btn layui-btn-normal"><span><i class="fa fa-camera"></i> &nbsp;点击更换封面 </span>
+        </button>
+    </div><!-- .center-header-overlay -->
+</div><!-- .page-header -->
+<!-- 个人中心 -->
+<div class="container">
+    <div class="col-12 user-information-box" style="height: 8000px;margin-top: 5%;float: left">
+        <div class="user-nav" style="height: 5000px; border: black solid 1px; float:left;">
+            <img src="/media/{{ request.user.image }}" alt="" class="user-img">
+            <ul class="list-group user-list">
+                <li class="list-group-item"><a href="">个人信息</a></li>
+                <li class="list-group-item"><a href="">我的收藏</a></li>
+                <li class="list-group-item"><a href="">创作中心</a></li>
+                <li class="list-group-item"><a href="">更多</a></li>
+            </ul>
+
+        </div>
+        <div class="introduce">
+                        <img src="/media/{{ request.user.image }}" alt="" style="width: 100%;height: 100%">
+
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>

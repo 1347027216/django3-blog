@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}博客 - 搜索{% endblock %}
+{% load static %}
+{% block h1 %}博客 - 全局搜索{% endblock %}
+{% block css %}
+    <style>
+        .search-box {
+            display: block;
+            margin: 20% 0;
+            width: 100%;
+        }
+
+        .search-box input {
+            margin-left: 20%;
+            padding-left: 10px;
+            width: 60%;
+            height: 150%;
+            border-radius: 10px;
+            border: #5ebbf2 solid 2px;
+            font-size: 20px;
+        }
+
+        .search-box button {
+            margin-left: 2%;
+        }
+
+        .search-box option {
+            border-radius: 3%;
+        }
+
+        @media screen and (max-width: 960px) {
+            .search-box input {
+                margin-left: 20%;
+                width: 50%;
+            }
+        }
+
+        @media screen and (max-width: 960px) {
+            .search-box input {
+                margin-left: 20%;
+                width: 50%;
+            }
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block search-box %}{% endblock %}
+{% block contaioner %}
+    <div class="container">
+        <!- 导航 ->
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumbs">
+                    <ul class="flex flex-wrap align-items-center p-0 m-0">
+                        <!-- <li><a href="#"><i class="fa fa-home"></i> Home</a></li>  -->
+                        <li><a href="{% url 'blog-index' %}"><i class="fa fa-home"></i>博客</a></li>
+                        <li><a href="{% url 'blog-search' %}"><i class="fa fa-search"></i>搜索</a></li>
+                    </ul>
+                </div><!-- .breadcrumbs -->
+            </div><!-- .col -->
+        </div><!-- .row -->
+        <!-- 导航结束 -->
+        <div class="row">
+            <div class="search-box">
+                <form action="{% url 'blog-search' %}" method="post" class="form-sub-w3">
+                    <input type="text" list="suggestion" class="search-input" name="search" placeholder="搜索您感兴趣的内容">
+                    <a href="">
+                        <button class="layui-btn layui-btn search"> 搜 索</button>
+                    </a>
+                    <datalist id="suggestion">
+                    </datalist>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div><!-- .row -->
+    </div><!-- .container -->
+
+    <script>
+        $('.search').click(function () {
+            let searchText = $(".search-input").val()
+            if (searchText) {
+                console.log(searchText)
+            } else {
+                layer.msg("请输入您的搜索内容")
+                return false
+            }
+        })
+    </script>
+
+{% endblock %}
+
+
+
+
+

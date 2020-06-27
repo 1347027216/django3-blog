@@ -1,0 +1,4 @@
+{{ object.title }}  #博客标题建立索引
+{{ object.content }} #博客内容建立索引
+{{ object.username }}#博客作者建立索引
+{{ object.describe }}#博客描述建立索引

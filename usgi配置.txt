@@ -1,0 +1,18 @@
+[uwsgi]
+master = true
+processes = 1
+threads = 2
+chdir = /www/wwwroot/mysite
+wsgi-file= /www/wwwroot/mysite/wsgi.py
+http = 0.0.0.0:8000
+logto = /www/wwwroot/mysite/logs/error.log
+chmod-socket = 660
+vacuum = true
+master = true
+max-requests = 1000
+module=mysite.wsgi:application 
+virtualenv=/www/wwwroot/mysite/mysite_venv
+
+env=DJANGO_SETTINGS_MODULE=mysite.settings 
+
+static-map = /static=/www/wwwroot/mysite/static

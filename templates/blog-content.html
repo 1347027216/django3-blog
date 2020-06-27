@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    {% load static %}
+
+    <link href="https://cdn.bootcss.com/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
+    <script src="{% static 'layui/layui.js' %}"></script>
+    <script src="{% static 'layui/layui.all.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'markdown-editor/css/code.css' %}">
+    <script>hljs.initHighlightingOnLoad();</script>
+
+{% endblock %}
+{% block contaioner %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 offset-lg-1 col-lg-10">
+                <div class="featured-image">
+                    <h2 class="course-cost text-center" style="margin: 3% 0"> &nbsp;</h2>
+                </div>
+            </div><!-- .col -->
+        </div><!-- .row -->
+
+        <div class="row">
+            <div class="col-12 offset-lg-1 col-lg-1">
+                <div class="post-share">
+                    <h3>分享</h3>
+                    <!-- 分享 -->
+                    <ul class="flex flex-wrap align-items-center p-0 m-0">
+                        <li><a class="wechat" href=""><i class="fa fa-wechat"></i></a></li>
+                        <li><a class="qq" href=""><i class="fa fa-qq"></i></a></li>
+                        <li><a class="weibo" href=""><i class="fa fa-weibo"></i></a></li>
+
+                    </ul>
+                </div><!-- .post-share -->
+            </div><!-- .col -->
+
+            <div class="col-12 col-lg-8">
+                <div class="blog-content">
+                    <div class="bloger-info flex flex-wrap align-items-center">
+                        <div class="blog-author flex flex-wrap align-items-center mt-3">
+                            <img src="/media/{{ request.user.image }}" alt="">
+                            <div class="author-wrap">
+                                <label class="m-0">作者</label>
+                                <div class="author-name"><a href="#">{{ user_information.username }}</a></div>
+                            </div><!-- .author-wrap -->
+                        </div><!-- .blog-author -->
+
+                        <div class="course-cats mt-3 text-center">
+                            <label class="m-0">发表时间</label>
+                            <div class="author-name"><a href="#">{{ blog_information.create_time }}</a></div>
+                        </div><!-- .course-cats -->
+
+                        <div class="blog-counts mt-3">
+                            <label class="m-0">累计文章数</label>
+                            <div class="text-center"><a href="#">{{ contents }}</a></div>
+                        </div><!-- .blog-counts -->
+                        <div class="mt-3">
+
+                            {% ifequal user_collect 1 %}
+                                <a class="btn collection" href="#">已收藏</a>
+                            {% else %}
+                                <a class="btn collection" href="#">收藏</a>
+                            {% endifequal %}
+
+
+
+                            <script>
+                                $(".collection").click(function () {
+                                    let user_flag = '{{ request.user.is_authenticated }}'
+
+                                    if (user_flag == 'False') {
+                                        window.open("{% url 'login' %}")
+                                    }
+                                    else {
+                                        let flag = $(".collection").text()
+                                        if (flag == "收藏") {
+                                            $.ajax({
+                                                url: "{% url 'user-collection' %}",
+                                                type: "post",
+                                                data: {
+                                                    csrfmiddlewaretoken: '{{ csrf_token  }}',
+                                                    state: flag,
+                                                    title_id:{{ blog_information.id }},
+                                                    author: "{{ user_information.username }}",
+                                                },
+                                                success: function (data) {
+                                                    layer.msg("已收藏")
+                                                    $(".collection").text(data)
+                                                },
+                                            })
+                                        }
+                                    /** 已收藏 **/
+                                        if (flag == "已收藏") {
+                                            $.ajax({
+                                                url: "{% url 'user-collection' %}",
+                                                type: "post",
+                                                data: {
+                                                    csrfmiddlewaretoken: '{{ csrf_token  }}',
+                                                    state: flag,
+                                                    title_id:{{ blog_information.id }},
+                                                    author: "{{ user_information.username }}",
+                                                },
+                                                success: function (data) {
+                                                    layer.msg("取消收藏")
+                                                    $(".collection").text(data)
+                                                },
+                                            })
+                                        }
+                                    }
+                                })
+                            </script>
+                        </div><!-- .mt-3 -->
+                    </div><!-- .bloger-info -->
+
+                    <div class="single-blog-cont-section">
+                        <h2>{{ title }}</h2>
+
+                        <p>
+                            {{ content|safe }}
+                        </p>
+                    </div>
+
+                </div>
+            </div><!-- .col -->
+        </div><!-- .row -->
+    </div><!-- .container -->
+
+
+    <script>
+        /***
+         $(document).ready(() => {
+            var src = $('#post_content').text()
+            var converter = new showdown.Converter();
+            var html = converter.makeHtml(src);
+            $('#post_content').html(html);
+            hljs.initHighlightingOnLoad();
+        })
+
+         ***/
+    </script>
+
+{% endblock %}

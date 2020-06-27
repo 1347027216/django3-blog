@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}博客 - 主页{% endblock %}
+{% load static %}
+{% block h1 %}博客{% endblock %}
+{% block contaioner %}
+    <div class="container">
+        <!- 导航 ->
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumbs">
+                    <ul class="flex flex-wrap align-items-center p-0 m-0">
+                        <!-- <li><a href="#"><i class="fa fa-home"></i> Home</a></li>  -->
+                        <li><a href="{% url 'blog-index' %}"><i class="fa fa-home"></i>Blog Grid</a></li>
+                        <li>{{ blog_category }}</li>
+                    </ul>
+                </div><!-- .breadcrumbs -->
+            </div><!-- .col -->
+        </div><!-- .row -->
+        <!- 导航结束 ->
+        <div class="row">
+            <div class="col-12 col-lg-8">
+                <div class="blog-posts">
+                    <div class="row mx-m-25">
+                            {% for content in all_content.object_list %}
+
+                            <!- 内容 ->
+                            <div class="col-12 col-md-12 px-25">
+                                <div class="blog-post-content">
+                                    <div class="blog-post-content-wrap col-12">
+                                        <header class="entry-header">
+                                            <!- 标题 ->
+                                            <h2 class="entry-title"><a
+                                                    href="?title={{ content.id }}">{{ content.title }}</a></h2>
+                                            <div class="entry-meta flex align-items-center">
+                                                <div class="post-author"><a href="{% url 'blog-author' %}?author={{ content.username }}">作者：{{ content.username }} </a>
+                                                </div>
+                                                <!- 阅读数 ->
+                                                <div class="post-comments"><a href="#">阅读量：{{ content.read_count }}</a>
+                                                </div>
+                                            </div><!-- .entry-meta -->
+                                            <div class="entry-meta flex align-items-center">
+                                                <!- 阅读数 ->
+                                                <div class="post-comments"><span>{{ content.create_time }}</span></div>
+                                            </div><!-- .entry-meta -->
+                                        </header><!-- .entry-header -->
+                                        <div class="entry-content">
+                                            <!- 描述 ->
+                                            <p><span>简介：</span>{{ content.describe }}</p>
+
+                                        </div><!-- .entry-content -->
+                                    </div><!-- .blog-post-content-wrap -->
+                                </div><!-- .blog-post-content -->
+                            </div><!-- .col -->
+                        {% endfor %}
+                        <!- 内容结束 - >
+
+                    </div><!-- .blog-posts -->
+                </div><!-- .col -->
+
+                <div class="pagination flex flex-wrap justify-content-between align-items-center ">
+                    <div class="col-12 col-lg-4 order-2 order-lg-1 mt-3 mt-lg-0 offset-lg-7 centered">
+                        <ul class="flex flex-wrap align-items-center order-2 order-lg-1 p-0 m-0">
+                            <!--分页 -->
+                            {% load i18n %}
+                            {% if all_content.has_previous %}
+                                <li><a href="?{{ all_content.previous_page_number.querystring }}"><i
+                                        class="fa fa-angle-left"></i></a>
+                                <li>
+                            {% endif %}
+
+                            {% for page in all_content.pages %}
+                                {% if page %}
+                                    {% ifequal page all_content.number %}
+                                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                    {% else %}
+                                        <li><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                    {% endifequal %}
+                                {% else %}
+                                    <li><a href="">...</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if all_content.has_next %}
+                                <li><a href="?{{ all_content.next_page_number.querystring }}"><i class="fa fa-angle-right"></i></a></li>
+                            {% endif %}
+                        <!--分页over -->
+                        </ul>
+                    </div>
+                </div><!-- .pagination -->
+
+            </div><!-- .col -->
+
+            <div class="col-12 col-lg-4 ">
+                <div class="sidebar">
+                    <div class="cat-links">
+                        <h2 class="col-12">热门分类</h2>
+                        <ul class="p-0 m-0">
+                            {% for category in category %}
+                                <li><a href="?category={{ category.category }}">{{ category.category }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div><!-- .cat-links -->
+
+                    <div class="popular-article">
+                        <h2 class="col-12">热门文章</h2>
+
+                        <ul class="p-0 m-0">
+                            {% for hot in hot %}
+                                <li class="flex flex-wrap justify-content-between align-items-start">
+                                    <div class="content-wrap col-lg-12">
+                                        <h3><a href="?title={{ hot.id }}">{{ hot.title }}</a></h3>
+                                        <div class="course-cost">
+                                            {#                                            <i class="fa fa-eye"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{ hot.read_count }}#}
+                                        </div>
+                                    </div><!-- .content-wrap -->
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div><!-- .popular-article -->
+                    <div class="popular-tags">
+                        <h2>热门标签</h2>
+
+                        <ul class="flex flex-wrap align-items-center p-0 m-0">
+                            <li><a href="#">Elasticsearch</a></li>
+                            <li><a href="#">机器学习</a></li>
+                            <li><a href="#">决策树</a></li>
+                            <li><a href="#">Scrapy</a></li>
+                            <li><a href="#">Redis</a></li>
+                        </ul>
+                    </div><!-- .popular-tags -->
+                </div><!-- .sidebar -->
+            </div><!-- .col -->
+        </div><!-- .row -->
+    </div>                  <!-- .container -->
+
+
+{% endblock %}

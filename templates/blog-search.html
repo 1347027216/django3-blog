@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}博客 - 搜索{% endblock %}
+{% load static %}
+{% block h1 %}博客 - 搜索{% endblock %}
+{% block contaioner %}
+    <div class="container">
+        <!- 导航 ->
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumbs">
+                    <ul class="flex flex-wrap align-items-center p-0 m-0">
+                        <!-- <li><a href="#"><i class="fa fa-home"></i> Home</a></li>  -->
+                        <li><a href="{% url 'blog-index' %}"><i class="fa fa-home"></i>博客</a></li>
+                        <li><a href="{% url 'blog-search' %}"><i class="fa fa-search"></i>搜索</a></li>
+                    </ul>
+                </div><!-- .breadcrumbs -->
+            </div><!-- .col -->
+        </div><!-- .row -->
+        <!-- 导航结束 -->
+        <div class="row">
+            <div class="col-12 col-lg-8">
+                <div class="blog-posts">
+                    <div class="row mx-m-25">
+
+                        <!-- 内容 -->
+                        <div class="col-12 col-md-12 px-25">
+                            <span>搜索关键词：{{ key_words }}</span>
+                            <small style="float: right">查询花费时间：{{ search_time }}<span
+                                    style="color: red"> {{ time }}毫秒.</span>。</small>
+                            <div class="blog-post-content">
+                                {% for id,title,author,describe,create_time,read_count in blog %}
+                                    <div class="blog-post-content-wrap col-12">
+                                        <header class="entry-header">
+                                            <!-- 标题 -->
+                                            <h2 class="entry-title"><a
+                                                    href="{% url 'blog-index' %}?title={{ id }}">{{ title }}</a></h2>
+                                            <div class="entry-meta flex align-items-center">
+                                                <div class="post-author"><a href="#">作者：{{ author }} </a>
+                                                </div>
+                                                <!-- 阅读数 -->
+                                                <div class="post-comments"><span>阅读数： {{ read_count }}</span>
+                                                </div>
+                                            </div><!-- .entry-meta -->
+                                            <div class="entry-meta flex align-items-center">
+                                                <!-- 时间 -->
+                                                <div class="post-comments"><span>{{ create_time }}</span></div>
+                                            </div><!-- .entry-meta -->
+                                            <div class="entry-meta flex align-items-center">
+                                                <!-- 时间 -->
+                                            </div><!-- .entry-meta -->
+                                        </header><!-- .entry-header -->
+                                        <div class="entry-content">
+                                            <!- 描述 ->
+                                            <p><span>简介：{{ describe }}</span></p>
+
+                                        </div><!-- .entry-content -->
+                                    </div><!-- .blog-post-content-wrap -->
+                                    </div><!-- .blog-post-content -->
+                                    </div><!-- .col -->
+                                {% endfor %}
+                        <!-- 内容 -->
+
+
+                    </div><!-- .blog-posts -->
+                </div><!-- .col -->
+
+                <div class="pagination flex flex-wrap justify-content-between align-items-center ">
+                    <div class="col-12 col-lg-4 order-2 order-lg-1 mt-3 mt-lg-0 offset-lg-7 centered">
+                        <ul class="flex flex-wrap align-items-center order-2 order-lg-1 p-0 m-0">
+                            <!--分页 -->
+
+                            <!--分页over -->
+                        </ul>
+                    </div>
+                </div><!-- .pagination -->
+
+            </div><!-- .col -->
+
+        </div><!-- .row -->
+    </div><!-- .container -->
+
+{% endblock %}
+
+
+
+
+

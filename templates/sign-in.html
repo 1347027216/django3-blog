@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用 户 登 录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+
+    <link href="{% static 'login&register/css/snow.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{% static 'login&register/css/style.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.css' %}">
+    <!- Layui ->
+    <link href="{% static 'layui/css/layui.css' %}" rel="stylesheet">
+    <!- ico ->
+    <link href="{% static "login&register/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css" media="all">
+
+
+    <!- js ->
+    <script type="text/javascript" src="{% static 'jQuery/jquery-3.3.1.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jQuery/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'layui/layui.js' %}"></script>
+    <script type="text/javascript" src="{% static 'layui/layui.all.js' %}"></script>
+
+
+    <!-- web font -->
+    <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+    <!-- //web font -->
+</head>
+<body>
+<div class="snow-container">
+    <div class="snow foreground"></div>
+    <div class="snow foreground layered"></div>
+    <div class="snow middleground"></div>
+    <div class="snow middleground layered"></div>
+    <div class="snow background"></div>
+    <div class="snow background layered"></div>
+</div>
+<div class="top-buttons-agileinfo">
+    <a href="#">登录</a>
+    <a href="{% url 'register' %}" class="active">注册</a>
+</div>
+<h1 class="pad-bottom-1"> Sign In </h1>
+<div class="main-agileits">
+    <!--form-stars-here-->
+    <div class="form-w3-agile">
+        <h2 class="sub-agileits-w3layouts">Sign In</h2>
+        <form action="{% url 'login' %}" method="post">
+
+            <div class="input-group pos-relative">
+                <span class="input-group-addon user-box"><i class="fa fa-envelope-o fa-fw"></i></span>
+                <input id="input-control" type="text" name="Username" placeholder="用户名或邮箱" required=""/>
+            </div>
+            <div class="input-group pos-relative">
+                <span class="input-group-addon user-box" style=""><i class="fa fa-lock fa-fw"></i></span>
+                <input id="input-control" type="password" name="Password" placeholder="密码" required=""/>
+            </div>
+
+            <p class="p-bottom-w3ls left pad-bottom-3 pad-right-3">
+                <a class="color-fff" href="{% url 'register' %}">点击注册</a>
+            </p>
+            <p class="p-bottom-w3ls left pad-bottom-3">
+                <a href="{% url 'forget' %}">忘记密码？</a>
+            </p>
+            <div class="submit-w3l">
+                <input type="submit" value="登录">
+            </div>
+            {% csrf_token %}
+        </form>
+    </div>
+</div>
+<!--//form-ends-here-->
+<!-- copyright -->
+<div class="copyright w3-agile">
+    <p> © 2020 rainbowsea.xyz</p>
+</div>
+<!-- //copyright -->
+
+<script type="text/javascript">
+
+    //监听输入
+    $('input[name=Username]').bind('input propertychange', function () {
+        console.log($('input[name=Username]').val())
+    });
+    $('input[name=Password]').bind('input propertychange', function () {
+        let password = $('input[name=Password]').val()
+        if (password.length < 8) {
+            layer.tips('您的密码长度不足8位,当前长度为：' + password.length, $('input[name=Password]'));
+        } else {
+            layer.close(layer.tips('您的密码长度不足8位,当前长度为：' + password.length, $('input[name=Password]')));
+        }
+    });
+
+    $("input[type=submit]").click(function () {
+        let password = $('input[name=Password]').val()
+        if (password.length < 8) {
+            alert("密码长度不够!")
+            return false;
+        }
+    })
+
+    var message = "{{ message }}"
+    if (message){
+        layer.msg(message)
+    }
+</script>
+
+
+</body>
+</html>

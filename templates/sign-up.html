@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用 户 注 册 </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+    <link href="{% static 'login&register/css/snow.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{% static 'login&register/css/style.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <!- Layui ->
+    <link href="{% static 'layui/css/layui.css' %}" rel="stylesheet">
+    <!- ico ->
+    <link href="{% static "font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css" media="all">
+
+
+    <!- js ->
+    <script type="text/javascript" src="{% static 'jQuery/jquery-3.3.1.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jQuery/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'layui/layui.js' %}"></script>
+    <script type="text/javascript" src="{% static 'layui/layui.all.js' %}"></script>
+
+    <!-- google font -->
+    <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+    <!-- //web font -->
+</head>
+<body>
+<div class="snow-container">
+    <div class="snow foreground"></div>
+    <div class="snow foreground layered"></div>
+    <div class="snow middleground"></div>
+    <div class="snow middleground layered"></div>
+    <div class="snow background"></div>
+    <div class="snow background layered"></div>
+</div>
+
+<div class="top-buttons-agileinfo">
+    <a href="{% url 'login' %}" class="active">登录</a><a href="#">注册</a>
+</div>
+<h1 class="pad-bottom-1"> Sign Up Form </h1>
+<div class="main-agileits">
+    <!--form-stars-here-->
+    <div class="form-w3-agile">
+        <h2 class="sub-agileits-w3layouts">登录</h2>
+        <form action="{% url 'register' %}" method="post">
+            {% block input %}
+            <div class="input-group pos-relative">
+                <span class="input-group-addon ico-box-register"><i class="fa fa-envelope-o fa-fw"></i></span>
+                <input id="input-control" type="email" name="Username" placeholder="邮箱" required=""/>
+            </div>
+            <div class="input-group pos-relative">
+                <span class="input-group-addon ico-box-register" style=""><i class="fa fa-lock fa-fw"></i></span>
+                <input id="input-control" type="password" name="Password" placeholder="密码" required=""/>
+            </div>
+            <div class="input-group pos-relative">
+                <span class="input-group-addon ico-box-register" style=""><i class="fa fa-lock fa-fw"></i></span>
+                <input id="input-control" type="password" name="rPassword" placeholder="重复密码" required=""/>
+            </div>
+
+            <!-验证码 ->
+            {{ UserRegister.captcha }}
+            <!- 提交 ->
+            <div class="submit-w3l">
+                <input type="submit" value="Sign up">
+            </div>
+            {% csrf_token %}
+            {% endblock %}
+        </form>
+    </div>
+</div>
+<!--//form-ends-here-->
+<!- copyright ->
+<div class="copyright w3-agile">
+    <p> © 2020 rainbowsea.xyz</p>
+</div>
+<script>
+    var msg = '{{ UserRegister.errors.captcha }}'
+    if (msg) {
+        layer.msg(msg)
+    }
+
+    /* 刷新验证码 */
+    $('.captcha').click(function () {
+        $.getJSON("/captcha/refresh/", function (result) {
+            $('.captcha').attr('src', result['image_url']);
+            $('#id_captcha_0').val(result['key'])
+        });
+    });
+    $("#id_captcha_1").attr("placeholder", "请输入验证码")
+
+    /*
+    行为验证
+     */
+    $('input[name=Password]').bind('input propertychange', function () {
+        let password = $('input[name=Password]').val()
+        if (password.length < 8) {
+            layer.tips('您的密码长度不足8位,且至少应是数字、字母、等两种字符以上的组合', $('input[name=Password]'));
+        } else {
+            layer.close(layer.tips('您的密码长度不足8位,且至少应是数字、字母、等两种字符以上的组合', $('input[name=Password]')));
+        }
+    });
+
+    $('input[name=rPassword]').bind('input propertychange', function () {
+        let password1 = $('input[name=Password]').val()
+        let password2 = $('input[name=rPassword]').val()
+        if (password1 != password2) {
+            layer.tips("您两次输入的密码不一致", $('input[name=rPassword]'));
+        } else {
+            layer.close(layer.tips("您两次输入的密码不一致", $('input[name=rPassword]')));
+        }
+    });
+
+    $('input[name=captcha_1]').bind('input propertychange', function () {
+        if ($('input[name=captcha_1]').val().length < 6) {
+            layer.tips("验证码长度小于6，当前长度为" + $('input[name=captcha_1]').val().length, $('input[name=captcha_1]'), {
+                tips: 3
+            })
+        }
+        else {
+            layer.close(layer.tips("验证码长度小于6，当前长度为" + $('input[name=captcha_1]').val().length, $('input[name=captcha_1]'), {
+                tips: 3
+            }))
+        }
+    });
+
+    $('input[type=submit]').click(function () {
+        let password1 = $('input[name=Password]').val()
+        let password2 = $('input[name=rPassword]').val()
+        let regNumber = /\d+/; //验证0-9的任意数字最少出现1次。
+        let regString = /[a-zA-Z]+/; //验证大小写26个字母任意字母最少出现1次。
+        let code = $('input[name=captcha_1]').val()
+
+        if (password1 != password2) {
+            layer.msg('两次密码输入不一致');
+            return false;
+        }
+        if (password1.length < 8) {
+            layer.msg('密码长度小于8');
+            return false
+        }
+        if (code.length < 6) {
+            layer.msg('验证码错误');
+            return false;
+        }
+        if (regNumber.test(password1) && regString.test(password1)) {
+            return true
+        } else {
+            layer.msg('密码至少应是数字和字母的两种组合');
+            return false;
+        }
+    });
+    var message = "{{ message }}"
+    if (message){
+        layer.msg('{{message}}');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    {% load static %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {#<link href=          rel='stylesheet' type='text/css'>#}
+    {% block css %}{% endblock %}
+    <script type='text/javascript' src='{% static 'jQuery/jquery-3.3.1.min.js' %}'></script>
+    <script type='text/javascript' src='{% static 'jQuery/jquery.collapsible.min.js' %}'></script>
+
+    <script type='text/javascript' src='{% static "blog/js/swiper.min.js" %}'></script>
+    <script type='text/javascript' src='{% static "blog/js/masonry.pkgd.min.js" %}'></script>
+    <script type='text/javascript' src="{% static 'layui/layui.all.js' %}"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- Layui CSS&JS -->
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
+
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+
+    <!-- ElegantFonts CSS -->
+    <link rel="stylesheet" href="{% static 'blog/css/elegant-fonts.css' %}">
+
+    <!-- themify-icons CSS -->
+    <link rel="stylesheet" href="{% static 'blog/css/themify-icons.css' %}">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="{% static 'blog/css/swiper.min.css' %}">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+</head>
+<body class="blog-page">
+
+<div class="page-header">
+    <header class="site-header">
+        <div class="top-header-bar">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-lg-6 d-none d-md-flex flex-wrap justify-content-center justify-content-lg-start mb-3 mb-lg-0">
+                        <div class="header-bar-email d-flex align-items-center">
+                            <i class="fa fa-calendar"></i><a href="#">桃之夭夭，灼灼其华</a>
+                        </div><!-- .header-bar -->
+                    </div><!-- .col -->
+
+                    <div class="col-12 col-lg-6 d-flex flex-wrap justify-content-center justify-content-lg-end align-items-center">
+                        {% block search-box %}
+                            <div class="header-bar-search">
+                                <form class="flex align-items-stretch" action="{% url 'blog-search' %}" method="post">
+                                    <!-- 博客搜索 -->
+                                    <input type="text" list="suggestion" autocomplete="off"
+                                           placeholder="搜索..."
+                                           name="search">
+                                    <button type="submit" value=""
+                                            class="flex justify-content-center align-items-center"><i
+                                            class="fa fa-search"></i></button>
+                                    <datalist id="suggestion"></datalist>
+                                    {% csrf_token %}
+                                </form>    <!-- 博客搜索 -->
+
+                            </div><!-- .header-bar-search -->
+                        {% endblock %}
+                        {% if request.user.is_authenticated %}
+                            <!-- creat-center-->
+                            <div class="user-write ">
+                                <a href="{% url 'blog-write' %}" target="_blank">
+                                    <button type="button" class="layui-btn layui-btn-normal">创作中心</button>
+                                </a>
+                            </div>
+                            <!-- creat-center-->
+                        {% else %}
+                            <div class="user-write ">
+                                <a href="{% url 'login' %}" target="_blank">
+                                    <button type="button" class="layui-btn layui-btn-normal">创作中心</button>
+                                </a>
+                            </div>
+
+                        {% endif %}
+                        <!-- user information -->
+                        {% if request.user.is_authenticated %}
+                            <div class="user-image ">
+                                <img src="/media/{{ request.user.image }}" alt="">
+                            </div>
+                            <div class="header-bar-menu ">
+
+                                <ul class="flex justify-content-center align-items-center py-2 pt-md-0">
+                                    <li><a href="{% url 'user-person-center' %}">{{ request.user.nike_name }}</a></li>
+                                    <li>
+                                        <a href="#" class="logout"><i class="fa fa-sign-out"
+                                                                      aria-hidden="true"></i>注销</a>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        {% else %}
+                            <div class="header-bar-menu">
+                                <ul class="flex justify-content-center align-items-center py-2 pt-md-0">
+                                    <li><a href="{% url 'register' %}">注册</a></li>
+                                    <li><a href="{% url 'login' %}">登录</a></li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <!-- .header-bar-menu -- end user information -->
+
+                    </div><!-- .col -->
+                </div><!-- .row -->
+            </div><!-- .container-fluid -->
+        </div><!-- .top-header-bar -->
+
+
+        <!-- 导航 -->
+        <div class="nav-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-9 col-lg-3">
+                        <div class="site-branding">
+                            <h1 class="site-title"><a href="{% url 'index' %}" rel="home">彩虹<span>海</span></a></h1>
+                        </div><!-- .site-branding -->
+                    </div><!-- .col -->
+
+                    <div class="col-3 col-lg-9 flex justify-content-end align-content-center">
+                        <nav class="site-navigation flex justify-content-end align-items-center">
+                            <ul class="flex flex-column flex-lg-row justify-content-lg-end align-content-center">
+                                <li><a href="{% url 'index' %}">主页</a>
+                                <li {% ifequal "/blog/"  request.path %} class='current-menu-item' {% endifequal %}><a
+                                        href="{% url 'blog-index' %}">博客</a></li>
+                                <li{% ifequal "/blog/about/"  request.path %}
+                                    class='current-menu-item' {% endifequal %}><a href="{% url 'blog-about' %}">关于</a>
+                                </li>
+                                <li{% ifequal "/search/"  request.path %}
+                                    class='current-menu-item' {% endifequal %}><a href="{% url 'blog-search' %}">搜索</a>
+                                </li>
+                            </ul>
+                            <div class="hamburger-menu d-lg-none">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div><!-- .hamburger-menu -->
+
+                            <div class="header-bar-cart">
+                                <a href="" class="flex justify-content-center align-items-center"></a>
+                            </div><!-- .header-bar-search -->
+                        </nav><!-- .site-navigation -->
+                    </div><!-- .col -->
+                </div><!-- .row -->
+            </div><!-- .container -->
+        </div><!-- .nav-bar -->
+    </header><!-- .site-header -->
+
+    <div class="page-header-overlay" style="">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <header class="entry-header">
+                        <h1>{% block h1 %}BLOG GRID{% endblock %}</h1>
+                    </header><!-- .entry-header -->
+                </div><!-- .col -->
+            </div><!-- .row -->
+        </div><!-- .container -->
+    </div><!-- .page-header-overlay -->
+</div><!-- .page-header -->
+<!-添加在导航下面的内容->
+{% block contaioner %}
+{% endblock %}
+
+{% block footer %}
+    <div class="clients-logo">
+        <div class="container">
+            <div class="row">
+                <div class="footer-widgets">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-md-6 col-lg-3">
+                                <div class="foot-about text-center">
+                                    <a class="foot-logo" href="#"><img src="{% static 'blog/images/footer-logo.png' %}"
+                                                                       alt=""></a>
+                                    <p>有朋自远方来，不亦乐乎. </p>
+
+                                    <p class="footer-copyright">
+                                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                        Copyright &copy; 彩虹海
+                                        <script>document.write(new Date().getFullYear());</script>
+                                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                    </p>
+                                </div><!-- .foot-about -->
+                            </div><!-- .col -->
+
+                            <div class="col-12 col-md-6 col-lg-3 mt-5 mt-md-0">
+                                <div class="foot-contact">
+                                    <h2>联系我</h2>
+
+                                    <ul>
+                                        <li><i class="fa fa-phone-square" aria-hidden="true"></i> : 13438137789</li>
+                                        <li><i class="fa fa-envelope-o" aria-hidden="true"></i> : 1347027216@qq.com</li>
+                                    </ul>
+                                </div><!-- .foot-contact -->
+                            </div><!-- .col -->
+
+                            <div class="col-12 col-md-6 col-lg-3 mt-5 mt-lg-0">
+                                <div class="quick-links flex flex-wrap">
+                                    <h2 class="w-100">快速导航</h2>
+
+                                    <ul class="w-50">
+                                        <li><a href="{% url 'index' %}">主页 </a></li>
+                                        <li><a href="{% url 'blog-index' %}">博客 </a></li>
+                                        <li><a href="{% url 'blog-about' %}">关于 </a></li>
+                                        <li><a href="{% url 'blog-index' %}">更多</a></li>
+                                    </ul>
+
+                                </div><!-- .quick-links -->
+                            </div><!-- .col -->
+
+                            <div class="col-12 col-md-6 col-lg-3 mt-5 mt-lg-0">
+                                <div class="quick-links flex flex-wrap">
+                                    <h2>&nbsp;&nbsp;&nbsp;分享&nbsp;&nbsp;&nbsp;</h2>
+
+                                    <ul class="follow-us flex flex-wrap align-items-center footer-share">
+                                        <li><a class="wechat" href="#"><i class="fa fa-wechat"></i></a></li>
+                                        <li><a class="qq" href="#"><i class="fa fa-qq"></i></a></li>
+                                        <li><a class="weibo" href="#"><i class="fa fa-weibo"></i></a></li>
+                                    </ul>
+                                </div><!-- .quick-links -->
+                            </div><!-- .col -->
+                        </div><!-- .row -->
+                    </div><!-- .container -->
+                </div><!-- .footer-widgets -->
+            </div><!-- .row -->
+        </div><!-- .container -->
+    </div><!-- .clients-logo -->
+{% endblock %}
+
+<script>
+    $(".logout").click(function () {
+        $.ajax({
+            url: "{% url 'logout' %}",
+            type: "POST",
+            data: {
+                username: "{{ request.user.email }}",
+                csrfmiddlewaretoken: '{{ csrf_token  }}'
+            },
+
+            success: function (message) {
+                layer.msg(message)
+            },
+            complete: function () {
+                $(".user-image").load("{% url 'blog-index' %} .user-img img");
+                $(".header-bar-menu").load("{% url 'blog-index' %} .header-bar-menu");
+                $(".user-write").load("{% url 'blog-index' %} .user-write");
+            }
+        });
+    })
+</script>
+
+<script type="text/javascript">
+
+    var suggest_url = "{% url 'search-suggest' %}"
+
+    $(function () {
+        $('input[name="search"]').bind("input propertychange", function () {
+            /*
+            每次键盘输入则清除上一次的option
+             */
+            $("#suggestion option").remove();
+            let searchText = $(this).val();
+            $.ajax({
+                url: suggest_url + "?search=" + searchText,
+                type: "get",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    let title = data.split(",");
+                    for (let suggest = 0; suggest < title.length; suggest++) {
+                        console.log(title[suggest])
+                        $("#suggestion").append("<option>" + title[suggest] + "</option>");
+                    }
+                },
+            })
+        })
+    })
+</script>
+
+</body>
+</html>
