@@ -89,7 +89,7 @@ DATABASES = {
         'NAME': 'blog',
         'USER': 'blog',
         'PASSWORD': '151968',
-        'HOST': '112.126.99.10',
+        'HOST': 'loaclhost',
         'PORT': '3306',
     }
 }
@@ -156,7 +156,7 @@ EMAIL_PORT = 25
 
 EMAIL_HOST_USER = '1347027216@qq.com'
 
-EMAIL_HOST_PASSWORD = 'szpnuluguvpshaih'
+EMAIL_HOST_PASSWORD = '您的smtp密码'
 
 EMAIL_USE_TLS = False
 
