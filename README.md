@@ -23,5 +23,5 @@
 #### 安装教程
 
     1.  git clone https://gitee.com/hou_cc/django.git
-    2.  安装虚拟环境 安装依赖
+    2.  安装虚拟环境 安装依赖【需删除掉项目所带venv文件夹，重新创建虚拟环境】
     3.  运行项目
