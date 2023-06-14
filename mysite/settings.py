@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -27,11 +26,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
     'simpleui',
+    'apps.user',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,12 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_elasticsearch_dsl',
     'captcha',
-    'hitcount',
     'pure_pagination',
     'apps.index',
     'apps.blog',
-    'apps.user',
-
 ]
 
 MIDDLEWARE = [
@@ -79,7 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -88,9 +83,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'blog',
         'USER': 'blog',
-        'PASSWORD': '151968',
-        'HOST': 'loaclhost',
+        'PASSWORD': '123456',
+        'HOST': '172.21.0.2',
         'PORT': '3306',
+        'OPTIONS': {
+            "init_command": "SET foreign_key_checks = 0;",
+        }
     }
 }
 
@@ -111,8 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -154,7 +150,7 @@ EMAIL_HOST = 'smtp.qq.com'
 
 EMAIL_PORT = 25
 
-EMAIL_HOST_USER = '1347027216@qq.com'
+EMAIL_HOST_USER = '1333333@qq.com'
 
 EMAIL_HOST_PASSWORD = '您的smtp密码'
 
@@ -163,13 +159,12 @@ EMAIL_USE_TLS = False
 # 代理服务器发送
 # EMAIL_USE_SSL = True
 
-EMAIL_FROM = '1347027216@qq.com'
+EMAIL_FROM = '1333333@qq.com'
 
 # media
 MEDIA_URL = '/media/'
 # 博客图片上传地址
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 '''
     # 分页设置
@@ -238,13 +233,12 @@ MDEDITOR_CONFIGS = {
     },
 }
 
-
 '''
     # Elasticsearch配置
 '''
-ELASTICSEARCH_DSL={
+ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'localhost:9200'
+        'hosts': '172.21.0.4:9200'
     },
 }
 '''
@@ -253,22 +247,12 @@ ELASTICSEARCH_DSL={
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://172.21.0.3/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "PASSWORD": "151968"
+            "PASSWORD": ""
         }
     }
 }
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
-
-
-'''
-    # ELASTICSEARCH配置
-'''
-ELASTICSEARCH_DSL={
-    'default': {
-        'hosts': 'localhost:9200'
-    },
-}

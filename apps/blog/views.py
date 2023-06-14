@@ -180,18 +180,15 @@ class BlogAboutView(View):
         return render(request, "blog-about.html")
 
 
-
-
-
 class BlogAuthorView(View):
-    def get(self,request):
-        username = request.GET.get("author","")
+    def get(self, request):
+        username = request.GET.get("author", "")
         blog = BlogModel.objects.filter(username=username)
         hot_content = BlogModel.objects.filter(username=username).order_by("favorite")
 
-        return render(request,"blog-author.html",
-        {
-            "author":username,
-            "all_content":blog,
-            "hot":hot_content
-        })
+        return render(request, "blog-author.html",
+                      {
+                          "author": username,
+                          "all_content": blog,
+                          "hot": hot_content
+                      })

@@ -16,12 +16,118 @@
 ![博客主页](https://images.gitee.com/uploads/images/2021/0512/142617_1436ffa2_5696074.png "屏幕截图.png")
 ![文章页](https://images.gitee.com/uploads/images/2021/0512/142852_c4e518db_5696074.png "屏幕截图.png")
 
-    
-    
 
 
-#### 安装教程
+#### 项目结构
+~~~bash
 
-    1.  git clone https://gitee.com/hou_cc/django.git
-    2.  安装虚拟环境 安装依赖【需删除掉项目所带venv文件夹，重新创建虚拟环境】
-    3.  运行项目
+├── apps
+│   ├── blog
+│   ├── index
+│   ├── search
+│   └── user
+├── build               环境镜像构建
+│   ├── Dockerfile
+│   └── requirements.txt
+├── docker-compose.yml
+├── elastic             elasticsearch 文件路径
+│   └── data            elasticsearch 数据持久化文件
+├── manage.py
+├── mysite            
+│   ├── asgi.py
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── mysql             mysql 文件路径
+│   ├── data          mysql 数据持久化文件
+│   └── Dockerfile    mysql 镜像构建
+├── README.md
+├── redis             redis 文件路径
+│   └── data          redis 数据持久化文件
+├── requirements.txt  项目依赖
+├── static            静态文件
+└── templates         模板文件
+
+# 若需要部署使用全部功能需自行配置stmp邮箱相关服务，在不改动mysql和Redis以及ElasticSearch配置的情况下，可直接使用docker-compose up -d 进行启动且无需进行数据库迁移
+~~~
+
+
+#### 常规开发环境搭建
+~~~bash
+ git clone https://gitee.com/hou_cc/django.git
+ 
+ mkdir vene && cd vene && virtulaenv . && .\scripts\activate
+ 
+ pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+ 
+ python manage.py makemigrations
+ 
+ python manage.py migrate
+ 
+ python manage.py runserver
+~~~
+
+
+### 一键部署环境
+> 使用Docker 进行环境搭建，需提前在电脑中安装docker（Docker for Windows）
+
+- **step 1**
+> git clone https://github.com/1347027216/django3-blog.git
+
+- **step 2**(默认已经对Docker环境、镜像Hub进行配置否则请自行百度)
+
+~~~bash
+# Docker 环境搭建 (django3-blog文件夹)
+docker build -t blog:v1 ./build
+~~~
+
+- **step 3启动服务（若使用Docker构建服务环境则无需修改项目中Mysql、redis、Elasticsearch服务地址）**
+~~~bash
+docker-compose up -d
+
+# 可能会需要手动migrate数据库则依次执行
+docker exec -it blog_service /bin/bash
+python manage.py makemigrations
+python manage.py migrate
+
+# 若出现：django.db.utils.OperationalError: (2002, "Can't connect to MySQL server on '172.21.0.2' (115)"，此异常原因为mysql服务未启动完成，则需要等待mysql服务启动完成后重启blog_service服务
+docker restart blog_service
+ ~~~
+
+
+#### Docker 常用命令
+
+~~~bash
+# 查看所有容器
+docker ps -a
+
+# 查看所有镜像
+docker images
+
+# 删除所有容器
+docker rm $(docker ps -aq)
+
+# 删除所有镜像
+docker rmi $(docker images -q)
+
+# 进入容器
+docker exec -it 容器id或容器名称 /bin/bash
+ex: docker exec -it blog_service /bin/bash
+
+# docker-compose 查看所有容器ip
+docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+
+# docker-compose 查看容器日志
+docker-compose logs -f 容器名称
+ex: docker-compose logs -f blog_service
+
+# docker-compose 后台启动容器
+docker-compose up -d
+
+# docker-compose 停止容器
+docker-compose stop
+
+# docker-compose 重启容器
+docker-compose restart
+~~~

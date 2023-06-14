@@ -1,0 +1,91 @@
+version: "3"
+
+networks:
+    blog_net:
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.21.0.0/24
+              gateway: 172.21.0.1
+
+
+services:
+  mysql_service:
+    image: mysql:5.7.16
+    restart: always
+    container_name: mysql_service
+    privileged: true
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: blog
+      MYSQL_USER: blog
+      MYSQL_PASSWORD: 123456
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+      --max_allowed_packet=128M;
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    networks:
+      blog_net:
+        ipv4_address: 172.21.0.2
+
+  redis_service:
+    image: redis:latest
+    container_name: redis_service
+    restart: always
+    privileged: true
+    ports:
+      - "6378:6379"
+    volumes:
+      - ./redis/data:/data
+    networks:
+      blog_net:
+        ipv4_address: 172.21.0.3
+
+  elastic_service:
+    image: docker.io/elasticsearch:7.7.1
+    container_name: elastic_service
+    restart: always
+    privileged: true
+    environment:
+      - cluster.name=elasticsearch
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ulimits:
+        memlock:
+            soft: -1
+            hard: -1
+    ports:
+        - "9200:9200"
+        - "9300:9300"
+    volumes:
+        - ./elastic/data:/usr/share/elasticsearch/data
+
+#    指定IP地址为172.21.0.4
+    networks:
+      blog_net:
+        ipv4_address: 172.21.0.4
+
+  blog_service:
+    image: blog:v1
+    container_name: blog_service
+    working_dir: /usr/src/blog
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - .:/usr/src/blog
+    ports:
+      - "8000:8000"
+    restart: always
+    networks:
+      blog_net:
+        ipv4_address: 172.21.0.5
+
