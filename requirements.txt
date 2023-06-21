@@ -15,7 +15,7 @@ elasticsearch-dsl==7.2.1
 Markdown==3.2.2
 mysqlclient
 Paginator==0.5.1
-Pillow==7.1.2
+Pillow>=9.2.0
 python-dateutil==2.8.1
 pytz==2020.1
 redis==3.5.3
