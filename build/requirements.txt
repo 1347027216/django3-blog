@@ -1,6 +1,6 @@
 asgiref==3.2.7
 captcha==0.3
-certifi==2020.4.5.2
+certifi==2023.7.22
 Django==3.0.7
 django-elasticsearch==7.0.2
 django-elasticsearch-dsl==7.1.1
