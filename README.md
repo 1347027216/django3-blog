@@ -14,7 +14,7 @@
 ![后台管理主页](https://images.gitee.com/uploads/images/2021/0512/142310_fedbc36d_5696074.png "屏幕截图.png")
 ![博客撰写](https://images.gitee.com/uploads/images/2021/0512/142349_c2102c22_5696074.png "屏幕截图.png")
 ![博客主页](https://images.gitee.com/uploads/images/2021/0512/142617_1436ffa2_5696074.png "屏幕截图.png")
-![文章页](https://images.gitee.com/uploads/images/2021/0512/142852_c4e518db_5696074.png "屏幕截图.png")
+
 
 
 
